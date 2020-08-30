@@ -1,0 +1,31 @@
+.container {
+  width: 100vw;  
+}
+
+.main-body {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 80%;
+  margin: 10vh auto 0 auto;
+}
+
+.header-container {
+  margin: 1rem 0;
+}
+
+.main-header {
+  font-weight: 300;
+  font-size: 2.5rem;
+}
+
+.sub-header {
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: #9E9E9E;
+}
+
+form {
+  width: 80%;
+  margin: 0 auto;
+}
