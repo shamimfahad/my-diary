@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { orderBy } from 'lodash';
 import './entries.styles.scss';
 import Entry from '../entry/entry.component';
 
@@ -24,18 +25,24 @@ const Entries = ({ currentUser }) => {
   const classes = useStyles();
   const [entries, setEntries] = useState([]);
   const { email } = currentUser;
-  const [sortBy, setSortBy] = React.useState('');
+
+  const order = (array, sortBy) => {
+    const newArray = orderBy(array, ['createdAt'], [sortBy]);
+    return newArray;
+  }
 
   useEffect(() => {
     const getEntries = async () => {
       const data = await fetchEntries(email);
-      setEntries(data);
+      const sortedData = order(data, 'desc');
+      setEntries(sortedData);
     };
     getEntries();
   }, [email]);
 
   const handleChange = (event) => {
-    setSortBy(event.target.value);
+    const sortedEntries = order(entries, `${event.target.value}`);
+    setEntries(sortedEntries);
   };
 
   return (
@@ -46,16 +53,14 @@ const Entries = ({ currentUser }) => {
           <InputLabel htmlFor="age-native-simple">Sort</InputLabel>
           <Select
             native
-            value={sortBy}
             onChange={handleChange}
             inputProps={{
               name: 'sort',
               id: 'sort-native',
             }}
           >
-            <option aria-label="None" value="" />
-            <option value="latest">Latest</option>
-            <option value="oldest">Oldest</option>
+            <option value="desc">Latest</option>
+            <option value="asc">Oldest</option>
           </Select>
         </FormControl>
       </div>

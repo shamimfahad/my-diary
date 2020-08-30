@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
@@ -21,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
     outline: 'none',
   },
+  modalHeader: {
+    marginBottom: '1rem'
+  }
 }));
 
 const EntryModal = (props) => {
@@ -39,37 +41,37 @@ const EntryModal = (props) => {
   };
   return (
     <>
-      <ClickAwayListener onClickAway={handleClose}>
-        <Modal
-          className={classes.modal}
-          open={open}
-          onClose={handleClose}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
-          }}
-        >
-          <Fade in={open}>
-            <div className={classes.paper}>
-              <Typography variant="h5" component="h2">
-                {moment(entry.createdAt.seconds * 1000).format('Do MMMM YYYY')}
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-                color="textSecondary"
-                component="p"
-              >
-                by {entry.author}
-              </Typography>
-              <Typography variant="body1" component="p">
-                {entry.body}
-              </Typography>
+      <Modal
+        className={classes.modal}
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <div className={classes.paper}>
+            <div className={classes.modalHeader}>
+            <Typography variant="h5" component="h2">
+              {moment(entry.createdAt.seconds * 1000).format('Do MMMM YYYY')}
+            </Typography>
+            <Typography
+              gutterBottom
+              variant="subtitle1"
+              color="textSecondary"
+              component="p"
+            >
+              by {entry.author}
+            </Typography>
             </div>
-          </Fade>
-        </Modal>
-      </ClickAwayListener>
+            <Typography lineHeight={5} variant="body1" component="p">
+              {entry.body}
+            </Typography>
+          </div>
+        </Fade>
+      </Modal>
     </>
   );
 };

@@ -12,11 +12,14 @@ import { Grid } from '@material-ui/core';
 
 import EntryModal from '../entry-modal/entry-modal.component';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
   },
-});
+  hint: {
+    color: theme.palette.text.hint,
+  },
+}));
 
 const Entry = ({ entry }) => {
   const [showModal, setShowModal] = useState(false);
@@ -47,7 +50,7 @@ const Entry = ({ entry }) => {
               <Typography
                 gutterBottom
                 variant="subtitle1"
-                color="textSecondary"
+                className={classes.hint}
                 component="p"
               >
                 {moment(entry.createdAt.seconds * 1000).format('hh:mm a')}
