@@ -10,6 +10,7 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { createEntry } from '../../firebase/firebase.utils';
+import SuccessMessage from '../success-message/success-message.component';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -22,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Index = ({ currentUser }) => {
   const classes = useStyles();
-  const [body, setBody] = useState(null);
+  const [body, setBody] = useState('');
+  const [showSnackbar, setShowSnackbar] = useState(false);
 
   const handleChange = (e) => {
     setBody(e.target.value);
@@ -35,11 +37,19 @@ const Index = ({ currentUser }) => {
       author: currentUser.email,
       body,
     };
+    setBody('');
     try {
-      await createEntry(entry);
+      await createEntry(entry).then((res) => {
+        setBody('');
+        setShowSnackbar(true);
+      });
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const resetShowSnackbar = () => {
+    setShowSnackbar(false);
   };
 
   return (
@@ -57,6 +67,7 @@ const Index = ({ currentUser }) => {
             multiline
             rows={12}
             fullWidth
+            value={body}
             onChange={handleChange}
           />
           <div>
@@ -90,6 +101,7 @@ const Index = ({ currentUser }) => {
           </div>
         </form>
       </div>
+      {showSnackbar && <SuccessMessage resetShowSnackbar={resetShowSnackbar} />}
     </div>
   );
 };
