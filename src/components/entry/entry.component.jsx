@@ -25,6 +25,9 @@ const Entry = ({ entry }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const classes = useStyles();
+  let imgSrc;
+
+  entry.imageUrl ? imgSrc = entry.imageUrl : imgSrc = "https://source.unsplash.com/featured/?{lifestyle},{notes},{travel}";
 
   const handleOpen = () => {
     setShowModal(true);
@@ -33,14 +36,14 @@ const Entry = ({ entry }) => {
 
   return (
     <>
-      <Grid item xs={3}>
+      <Grid item xs={12} md={6} sm={6} lg={3}>
         <Card className={classes.root}>
           <CardActionArea onClick={handleOpen}>
             <CardMedia
               component="img"
               alt="Contemplative Reptile"
               height="140"
-              image="https://source.unsplash.com/random"
+              image={imgSrc}
               title="Contemplative Reptile"
             />
             <CardContent>

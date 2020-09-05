@@ -14,3 +14,10 @@
   font-size: 1.7rem;
   margin: 3rem 0 1.5rem;
 }
+
+@media(max-width: 768px) {
+  .entries-nav {
+    flex-direction: column;
+    margin: 0.5rem 0;
+  }
+}

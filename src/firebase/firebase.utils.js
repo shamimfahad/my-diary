@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/storage';
 import 'firebase/auth';
 
 const config = {
@@ -56,12 +57,13 @@ export const fetchEntries = async (email) => {
     .where('author', '==', email)
     .get();
   const transformedEntries = (await entriesSnapshot).docs.map((doc) => {
-    const { body, createdAt, author } = doc.data();
+    const { body, createdAt, author, imageUrl } = doc.data();
     return {
       id: doc.id,
       body,
       author,
       createdAt,
+      imageUrl,
     };
   });
 
@@ -72,6 +74,7 @@ firebase.initializeApp(config);
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
+export const storage = firebase.storage();
 
 const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account' });

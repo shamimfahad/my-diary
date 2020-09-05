@@ -29,3 +29,12 @@ form {
   width: 80%;
   margin: 0 auto;
 }
+
+@media(max-width: 768px) {
+  .main-body {
+    width: 90%;
+  }
+  form {
+    width: 100%;
+  }
+}

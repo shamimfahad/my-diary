@@ -22,10 +22,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserIcon = () => {
+const UserIcon = (props) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const { currentUser: { displayName } } = props;
+  const fullName = displayName.split(' ');
+  const firstName = fullName[0];
   let location = useLocation();
 
   const handleToggle = () => {
@@ -65,7 +68,7 @@ const UserIcon = () => {
           onClick={handleToggle}
           className={classes.userIcon}
         >
-          Meow
+          {firstName}
         </Button>
         <Popper
           open={open}

@@ -48,7 +48,7 @@ const SuccessMessage = (props) => {
         onClose={handleClose}
       >
         <Alert onClose={handleClose} severity="success">
-          Your mail has been sent successfully!
+          Entry Saved Successfully
         </Alert>
       </Snackbar>
     </div>
