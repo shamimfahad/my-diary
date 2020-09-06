@@ -73,12 +73,14 @@ const Index = ({ currentUser }) => {
 
     let entry = {
       author: currentUser.email,
+      author_id: currentUser.id,
       body,
     };
     if (image) {
       const imageUrl = await imageUpload(image);
       entry = {
         author: currentUser.email,
+        author_id: currentUser.id,
         body,
         imageUrl,
       };
