@@ -13,10 +13,18 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    position: "absolute",
     maxWidth: 700,
     outline: 'none',
+    maxHeight: 500,
+    overflow: 'scroll',
     [theme.breakpoints.down('sm')]: {
-      maxWidth: 350,
+      maxWidth: 370,
+      maxHeight: 600,
+    },
+    [theme.breakpoints.down('md')]: {
+      maxWidth: 700,
+      maxHeight: 800,
     },
   },
   media: {
