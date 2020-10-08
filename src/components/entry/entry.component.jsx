@@ -27,7 +27,25 @@ const Entry = ({ entry }) => {
   const classes = useStyles();
   let imgSrc;
 
-  entry.imageUrl ? imgSrc = entry.imageUrl : imgSrc = "https://source.unsplash.com/featured/?{lifestyle},{notes},{travel}";
+  entry.imageUrl
+    ? (imgSrc = entry.imageUrl)
+    : (imgSrc =
+        'https://source.unsplash.com/featured/?{lifestyle},{notes},{travel}');
+
+  const escFunction = React.useCallback((event) => {
+    if (event.keyCode === 27) {
+      setShowModal(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (showModal === true) {
+      document.addEventListener('keydown', escFunction, false);
+      return () => {
+        document.removeEventListener('keydown', escFunction, false);
+      };
+    }
+  });
 
   const handleOpen = () => {
     setShowModal(true);

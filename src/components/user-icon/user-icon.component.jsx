@@ -26,7 +26,9 @@ const UserIcon = (props) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const { currentUser: { displayName } } = props;
+  const {
+    currentUser: { displayName },
+  } = props;
   const fullName = displayName.split(' ');
   const firstName = fullName[0];
   let location = useLocation();
@@ -94,12 +96,24 @@ const UserIcon = (props) => {
                   >
                     {location.pathname === '/' ? null : (
                       <MenuItem onClick={handleClose}>
-                        <Link to="/">New Entry</Link>
+                        <Link
+                          to="/"
+                          style={{ textDecoration: 'none', color: '#424242' }}
+                        >
+                          New Entry
+                        </Link>
                       </MenuItem>
                     )}
-                    <MenuItem onClick={handleClose}>
-                      <Link to="/entries">Your Entries</Link>
-                    </MenuItem>
+                    {location.pathname === '/entries' ? null : (
+                      <MenuItem onClick={handleClose}>
+                        <Link
+                          to="/entries"
+                          style={{ textDecoration: 'none', color: '#424242' }}
+                        >
+                          Your Entries
+                        </Link>
+                      </MenuItem>
+                    )}
                     <MenuItem onClick={() => auth.signOut()}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>

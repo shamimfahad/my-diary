@@ -10,10 +10,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import { Button } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Linkify from 'react-linkify';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    position: "absolute",
+    position: 'absolute',
     maxWidth: 700,
     outline: 'none',
     maxHeight: 500,
@@ -104,9 +105,11 @@ const EntryModal = (props) => {
                     by {entry.author}
                   </Typography>
                 </div>
-                <Typography lineheight={5} variant="body1" component="p">
-                  {entry.body}
-                </Typography>
+                <Linkify>
+                  <Typography lineheight={5} variant="body1" component="p">
+                    {entry.body}
+                  </Typography>
+                </Linkify>
               </div>
               {matches && <Button onClick={handleClose}>Close</Button>}
             </CardContent>
