@@ -51,25 +51,6 @@ export const createEntry = async (entryData) => {
   }
 };
 
-export const fetchEntries = async (email) => {
-  const entriesSnapshot = firestore
-    .collection('entries')
-    .where('author', '==', email)
-    .get();
-  const transformedEntries = (await entriesSnapshot).docs.map((doc) => {
-    const { body, createdAt, author, imageUrl } = doc.data();
-    return {
-      id: doc.id,
-      body,
-      author,
-      createdAt,
-      imageUrl,
-    };
-  });
-
-  return transformedEntries;
-};
-
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();

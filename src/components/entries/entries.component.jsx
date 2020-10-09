@@ -16,7 +16,8 @@ import {
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
 
-import { fetchEntries } from '../../firebase/firebase.utils';
+import { firestore } from '../../firebase/firebase.utils';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +33,9 @@ const Entries = ({ currentUser }) => {
   const classes = useStyles();
   const [loadedData, setLoadedData] = useState([]);
   const [entries, setEntries] = useState([]);
-  const [selectedDate, setSelectedDate] = React.useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [lastVisible, setLastVisible] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
 
   const { email } = currentUser;
 
@@ -41,12 +44,63 @@ const Entries = ({ currentUser }) => {
     return newArray;
   };
 
+  const fetchEntries = async (email) => {
+    firestore
+      .collection('entries')
+      .where('author', '==', email)
+      .orderBy('createdAt', 'desc')
+      .limit(10)
+      .get()
+      .then((entriesSnapshot) => {
+        setLastVisible(entriesSnapshot.docs[entriesSnapshot.docs.length - 1]);
+        const transformedEntries = entriesSnapshot.docs.map((doc) => {
+          const { body, createdAt, author, imageUrl } = doc.data();
+          return {
+            id: doc.id,
+            body,
+            author,
+            createdAt,
+            imageUrl,
+          };
+        });
+        setEntries(transformedEntries);
+        setLoadedData(transformedEntries);
+      });
+  };
+
+  const fetchMoreData = async (email) => {
+    firestore
+      .collection('entries')
+      .where('author', '==', email)
+      .orderBy('createdAt', 'desc')
+      .limit(10)
+      .startAfter(lastVisible)
+      .get()
+      .then((entriesSnapshot) => {
+        if (entriesSnapshot.docs.length > 0) {
+          setLastVisible(entriesSnapshot.docs[entriesSnapshot.docs.length - 1]);
+          const transformedEntries = entriesSnapshot.docs.map((doc) => {
+            const { body, createdAt, author, imageUrl } = doc.data();
+            return {
+              id: doc.id,
+              body,
+              author,
+              createdAt,
+              imageUrl,
+            };
+          });
+          setEntries(entries.concat(transformedEntries));
+          setLoadedData(loadedData.concat(transformedEntries));
+        }
+        else {
+          setHasMore(false);
+        }
+      });
+  };
+
   useEffect(() => {
     const getEntries = async () => {
-      const data = await fetchEntries(email);
-      const sortedData = order(data, 'desc');
-      setEntries(sortedData);
-      setLoadedData(sortedData);
+      await fetchEntries(email);
     };
     getEntries();
   }, [email]);
@@ -81,6 +135,10 @@ const Entries = ({ currentUser }) => {
     e.preventDefault();
     setSelectedDate(null);
     setEntries(loadedData);
+  };
+
+  const fetchNextSlot = async () => {
+    await fetchMoreData(email);
   };
 
   return (
@@ -119,13 +177,21 @@ const Entries = ({ currentUser }) => {
           </Select>
         </FormControl>
       </div>
-      <Grid container className={classes.root} spacing={2}>
-        {entries ? (
-          entries.map((entry) => <Entry key={entry.id} entry={entry} />)
-        ) : (
-          <div>You don't have any entries</div>
-        )}
-      </Grid>
+      <InfiniteScroll
+        dataLength={loadedData.length}
+        next={fetchNextSlot}
+        hasMore={hasMore}
+        style={{overflow: "hidden"}}
+        loader={<h4 style={{textAlign: 'center', marginBottom: '1rem'}}>Loading...</h4>}
+      >
+        <Grid container className={classes.root} spacing={2} style={{marginBottom: '1rem'}}>
+          {entries ? (
+            entries.map((entry) => <Entry key={entry.id} entry={entry} />)
+          ) : (
+            <div>You don't have any entries</div>
+          )}
+        </Grid>
+      </InfiniteScroll>
     </div>
   );
 };
